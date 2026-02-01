@@ -16,8 +16,10 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import z from "zod";
 
 export default function Signup() {
   const form = useForm({
@@ -29,8 +31,12 @@ export default function Signup() {
     },
   });
 
-  const onSubmit = () => {
-    console.log("Submitted");
+  const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+    await authClient.signUp.email({
+      email: data.email,
+      name: data.name,
+      password: data.password,
+    });
   };
 
   return (
@@ -48,7 +54,11 @@ export default function Signup() {
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel>Full Name</FieldLabel>
-                    <Input aria-invalid={fieldState.invalid} placeholder="Habibur Rahman" {...field} />
+                    <Input
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Habibur Rahman"
+                      {...field}
+                    />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -61,7 +71,11 @@ export default function Signup() {
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel>Email</FieldLabel>
-                    <Input aria-invalid={fieldState.invalid} placeholder="habibur@example.com" {...field} />
+                    <Input
+                      aria-invalid={fieldState.invalid}
+                      placeholder="habibur@example.com"
+                      {...field}
+                    />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -74,7 +88,12 @@ export default function Signup() {
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel>Password</FieldLabel>
-                    <Input aria-invalid={fieldState.invalid} placeholder="********" type="password" {...field} />
+                    <Input
+                      aria-invalid={fieldState.invalid}
+                      placeholder="********"
+                      type="password"
+                      {...field}
+                    />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
